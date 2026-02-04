@@ -3,9 +3,12 @@ const productId = "SKETCHUP";
 
 let lastRenderedPlanId = null;
 let lastRenderedStatus = null;
+let lastRenderedSessionId = null;
+
 
 
 if (!userId) window.location.href = "login.html";
+
 
 let lastWarnShown = null;
 
@@ -33,21 +36,31 @@ async function loadStatus() {
 
     // 3. No active JIT
     if (!statusRes || statusRes.status === "NONE" || statusRes.status === "EXPIRED") {
+
+
         dynamicTools.style.display = "none";
         notification.innerText = "";
         lastWarnShown = null;
+        lastRenderedSessionId = null;
+        lastRenderedStatus = null;
+        lastRenderedPlanId = null;
         return;
     }
 
     // 4. WARN popups (only once)
     if (statusRes.status === "WARN_50" && lastWarnShown !== "WARN_50") {
-        alert("⚠️ 50% of your JIT time is used");
+        alert("50% of your JIT time is used");
         lastWarnShown = "WARN_50";
     }
 
     if (statusRes.status === "WARN_90" && lastWarnShown !== "WARN_90") {
-        alert("⏰ 90% of your JIT time is used, Please save your work");
+        alert("90% of your JIT time is used, Please save your work");
         lastWarnShown = "WARN_90";
+    }
+
+    if(statusRes.status === "COMPLETE" && lastWarnShown !== "COMPLETE") {
+        alert("COMPLETE JIT time is used, Grace time started and will expire soon\n kindly save your work");
+        lastWarnShown = "COMPLETE";
     }
 
 
@@ -62,15 +75,14 @@ async function loadStatus() {
     }
 
     if (
+        statusRes.sessionId === lastRenderedSessionId &&
         statusRes.status === lastRenderedStatus &&
         statusRes.planId === lastRenderedPlanId
     ) {
         return;
     }
 
-// mark current state as rendered
-    lastRenderedStatus = statusRes.status;
-    lastRenderedPlanId = statusRes.planId;
+
 
     buttonsDiv.innerHTML = "";
 
@@ -84,6 +96,11 @@ async function loadStatus() {
 
     dynamicTools.style.display = "block";
     notification.innerText = `JIT Status: ${statusRes.status}`;
+
+    // mark current state as rendered
+    lastRenderedSessionId = statusRes.sessionId;
+    lastRenderedStatus = statusRes.status;
+    lastRenderedPlanId = statusRes.planId;
 
 }
 
