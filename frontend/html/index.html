@@ -3,12 +3,19 @@
 <head>
     <title>SketchUp</title>
     <link rel="stylesheet" href="../css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 </head>
 <body>
 
 <header>
     <h1>SketchUp</h1>
-    <button onclick="goSubscriptions()">Subscriptions</button>
+    <div class="header-actions">
+        <button class="subscription-btn" onclick="goSubscriptions()">Subscriptions</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+
+    </div>
+
 </header>
 
 <div id="credits"></div>
@@ -25,6 +32,9 @@
 
 <div id="notification"></div>
 
+
+<script src="../js/env.js"></script>
+<script src="../js/auth.js"></script>
 <script src="../js/api.js"></script>
 <script src="../js/index.js"></script>
 </body>

@@ -33,3 +33,10 @@ async function register() {
         alert(res.error || "Registration failed");
     }
 }
+
+function logout() {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userId");
+    window.location.href = "login.html";
+}
+

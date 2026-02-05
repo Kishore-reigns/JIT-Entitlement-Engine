@@ -1,4 +1,4 @@
-const API_BASE = "https://16ih3wa0c6.execute-api.eu-north-1.amazonaws.com/dev";
+const API_BASE = window.env.API_BASE_URL
 
 function getUserId() {
     return localStorage.getItem("userId");
