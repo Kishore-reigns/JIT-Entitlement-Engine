@@ -4,6 +4,10 @@ function getUserId() {
     return localStorage.getItem("userId");
 }
 
+function getSelectedProduct() {
+    return localStorage.getItem("selectedProduct");
+}
+
 async function apiGet(path) {
     const res = await fetch(`${API_BASE}${path}`);
     return res.json();

@@ -1,7 +1,11 @@
 const userId = getUserId();
-const productId = "SKETCHUP";
+const productId = getSelectedProduct();
+
 
 if (!userId) window.location.href = "login.html";
+if (!productId) window.location.href = "products.html";
+
+
 
 async function loadPlans() {
     // 1. Load user credits
@@ -31,40 +35,61 @@ async function loadPlans() {
     container.innerHTML = "";
 
     plans.forEach(p => {
+
         const div = document.createElement("div");
         div.className = "plan";
 
         const isActive = p.planId === activePlanId;
-        const isFree = p.costPerMinute === 0;
+        const isFree = Number(p.costPerMinute) === 0;
 
-        if (isActive) {
-            div.classList.add("active");
+        if (isActive) div.classList.add("active");
+
+        /* ===============================
+           SUBSCRIBE BUTTON LOGIC
+        =============================== */
+
+        let subscribeBtn = "";
+        let jitBtn = "";
+
+        // BASIC PLAN
+        if (isFree) {
+            subscribeBtn = `<button disabled>Subscribed</button>`;
+            jitBtn = `<button disabled>Included</button>`;
+        }
+
+        // ACTIVE JIT PLAN
+        else if (isActive) {
+            subscribeBtn = `<button disabled>Subscribed</button>`;
+            jitBtn = `<button disabled>Active Plan</button>`;
+        }
+
+        // OTHER PAID PLANS
+        else {
+            subscribeBtn = `<button onclick="subscribeDemo('${p.planId}')">Subscribe</button>`;
+            jitBtn = `<button onclick="activate('${p.planId}', ${p.costPerMinute})">
+                    Activate JIT
+                  </button>`;
         }
 
         div.innerHTML = `
-            <h3>${p.name}</h3>
+        <h3>${p.name}</h3>
 
-            <p><strong>Features:</strong><br>
-                ${p.features
+        <p><strong>Features:</strong><br>
+            ${p.features
             .map(f => (typeof f === "string" ? f : f.S))
-            .join(", ")}
-            </p>
-
-            <p><strong>Cost / min:</strong> ${p.costPerMinute}</p>
-
-            ${
-            isActive
-                ? `<button disabled>Active Plan</button>`
-                : isFree
-                    ? `<button disabled>Included</button>`
-                    : `<button onclick="activate('${p.planId}', ${p.costPerMinute})">
-                              Activate JIT
-                          </button>`
+            .join(", ")
         }
-        `;
+        </p>
+
+        <p><strong>Cost / min:</strong> ${p.costPerMinute}</p>
+
+        ${subscribeBtn}
+        ${jitBtn}
+    `;
 
         container.appendChild(div);
     });
+
 }
 
 async function activate(planId, costPerMinute) {

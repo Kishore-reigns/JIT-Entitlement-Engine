@@ -9,9 +9,13 @@
 <body>
 
 <header>
-    <h1>SketchUp</h1>
+    <h1 id="productTitle"></h1>
     <div class="header-actions">
         <button class="subscription-btn" onclick="goSubscriptions()">Subscriptions</button>
+        <button class="product-switch-btn" onclick="window.location.href='products.html'">
+            Switch Product
+        </button>
+
         <button class="logout-btn" onclick="logout()">Logout</button>
 
     </div>
@@ -20,9 +24,10 @@
 
 <div id="credits"></div>
 
-<h3>Basic Tools</h3>
-<button>Edit</button>
-<button>Move</button>
+<div id="basicToolButtons">
+    <h3>Basic Tools</h3>
+</div>
+
 
 <div id="dynamicTools" style="display:none;">
     <h3>Available Tools</h3>

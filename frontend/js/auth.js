@@ -10,7 +10,7 @@ async function login() {
 
     if (res.userId) {
         localStorage.setItem("userId", res.userId);
-        window.location.href = "index.html";
+        window.location.href = "products.html";
     } else {
         alert(res.error || "Login failed");
     }

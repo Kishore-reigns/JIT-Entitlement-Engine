@@ -1,5 +1,6 @@
 const userId = getUserId();
-const productId = "SKETCHUP";
+const productId = getSelectedProduct();
+
 
 let lastRenderedPlanId = null;
 let lastRenderedStatus = null;
@@ -8,12 +9,15 @@ let lastRenderedSessionId = null;
 
 
 if (!userId) window.location.href = "login.html";
+if (!productId) window.location.href = "products.html";
+
+document.getElementById("productTitle").innerText = productId;
 
 
 let lastWarnShown = null;
 
 async function loadStatus() {
-    // 1. Load credits
+
     const profile = await apiGet(
         `/user/profile?userId=${encodeURIComponent(userId)}`
     );
@@ -21,58 +25,82 @@ async function loadStatus() {
     document.getElementById("credits").innerText =
         `Credits: ${profile.creditBalance}`;
 
-    // 2. Load JIT status
     const statusApiRes = await apiGet(
         `/jit/status?userId=${encodeURIComponent(userId)}&productId=${productId}`
     );
 
-    //  IMPORTANT: unwrap message
     const statusRes = statusApiRes.message;
 
+    const basicButtonsDiv = document.getElementById("basicToolButtons");
     const dynamicTools = document.getElementById("dynamicTools");
     const buttonsDiv = document.getElementById("toolButtons");
     const notification = document.getElementById("notification");
 
+    /* ===============================
+       LOAD PLANS ONCE
+    =============================== */
 
-    // 3. No active JIT
+    const plans = await apiGet(`/catalog/plans?productId=${productId}`);
+
+    const basicPlan = plans.find(p => p.planId === "BASIC");
+
+    if (basicPlan) {
+
+        basicButtonsDiv.innerHTML = "";
+
+        basicPlan.features.forEach(f => {
+            const feature = typeof f === "string" ? f : f.S;
+
+            const btn = document.createElement("button");
+            btn.innerText = feature;
+
+            basicButtonsDiv.appendChild(btn);
+        });
+    }
+
+    /* ===============================
+       NO ACTIVE JIT
+    =============================== */
+
     if (!statusRes || statusRes.status === "NONE" || statusRes.status === "EXPIRED") {
-
 
         dynamicTools.style.display = "none";
         notification.innerText = "";
+
         lastWarnShown = null;
         lastRenderedSessionId = null;
         lastRenderedStatus = null;
         lastRenderedPlanId = null;
+
         return;
     }
 
-    // 4. WARN popups (only once)
+    /* ===============================
+       WARN ALERTS
+    =============================== */
+
     if (statusRes.status === "WARN_50" && lastWarnShown !== "WARN_50") {
         alert("50% of your JIT time is used");
         lastWarnShown = "WARN_50";
     }
 
     if (statusRes.status === "WARN_90" && lastWarnShown !== "WARN_90") {
-        alert("90% of your JIT time is used, Please save your work");
+        alert("90% of your JIT time is used");
         lastWarnShown = "WARN_90";
     }
 
-    if(statusRes.status === "COMPLETE" && lastWarnShown !== "COMPLETE") {
-        alert("COMPLETE JIT time is used, Grace time started and will expire soon\n kindly save your work");
+    if (statusRes.status === "COMPLETE" && lastWarnShown !== "COMPLETE") {
+        alert("JIT completed. Grace period started.");
         lastWarnShown = "COMPLETE";
     }
 
-
-    // 5. Fetch plans
-    const plans = await apiGet(`/catalog/plans?productId=${productId}`);
+    /* ===============================
+       ACTIVE PLAN FEATURES
+    =============================== */
 
     const activePlan = plans.find(p => p.planId === statusRes.planId);
 
-    if (!activePlan) {
-        console.error("Active plan not found:", statusRes.planId);
-        return;
-    }
+    if (!activePlan) return;
 
     if (
         statusRes.sessionId === lastRenderedSessionId &&
@@ -82,27 +110,25 @@ async function loadStatus() {
         return;
     }
 
-
-
     buttonsDiv.innerHTML = "";
 
-// 6. Render buttons from ACTIVE PLAN ONLY
     activePlan.features.forEach(f => {
         const feature = typeof f === "string" ? f : f.S;
+
         const btn = document.createElement("button");
         btn.innerText = feature;
+
         buttonsDiv.appendChild(btn);
     });
 
     dynamicTools.style.display = "block";
     notification.innerText = `JIT Status: ${statusRes.status}`;
 
-    // mark current state as rendered
     lastRenderedSessionId = statusRes.sessionId;
     lastRenderedStatus = statusRes.status;
     lastRenderedPlanId = statusRes.planId;
-
 }
+
 
 function goSubscriptions() {
     window.location.href = "subscriptions.html";

@@ -10,9 +10,10 @@
 
 body {
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    background: linear-gradient(135deg, #eef4ff, #f8fbff);
+    background: linear-gradient(135deg, #eef4ff, #f7faff);
     color: #1f2937;
     min-height: 100vh;
+    line-height: 1.6;
 }
 
 /* ===============================
@@ -23,22 +24,23 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 40px;
+    padding: 20px 48px;
     background: linear-gradient(135deg, #0b5ed7, #084298);
     color: white;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.18);
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 20px;
 }
 
 header h1 {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .header-actions {
     display: flex;
-    gap: 12px;
+    gap: 18px;     /* ⭐ More spacing */
     flex-wrap: wrap;
 }
 
@@ -47,21 +49,22 @@ header h1 {
 ================================ */
 
 button {
-    padding: 11px 20px;
-    border-radius: 10px;
+    padding: 13px 26px;
+    border-radius: 12px;
     border: none;
     background: linear-gradient(135deg, #0b5ed7, #084298);
     color: white;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: 0.25s ease;
+    transition: all 0.25s ease;
     white-space: nowrap;
+    letter-spacing: 0.4px;
 }
 
 button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(11,94,215,0.35);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 24px rgba(11,94,215,0.35);
 }
 
 button:disabled {
@@ -72,20 +75,12 @@ button:disabled {
 
 /* Subscription */
 .subscription-btn {
-    background: dodgerblue;
-}
-
-.subscription-btn:hover {
-    background: #2563eb;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
 /* Logout */
 .logout-btn {
-    background: #ef4444 !important;
-}
-
-.logout-btn:hover {
-    background: #dc2626 !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
 }
 
 /* ===============================
@@ -93,13 +88,13 @@ button:disabled {
 ================================ */
 
 .container {
-    max-width: 1000px;
-    margin: 45px auto;
+    max-width: 1050px;
+    margin: 60px auto;
     background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
-    padding: 35px;
-    border-radius: 16px;
-    box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+    backdrop-filter: blur(14px);
+    padding: 45px;
+    border-radius: 20px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.08);
 }
 
 /* ===============================
@@ -107,13 +102,13 @@ button:disabled {
 ================================ */
 
 h2 {
-    font-size: 24px;
-    margin-bottom: 25px;
+    font-size: 26px;
+    margin-bottom: 32px;
 }
 
 h3 {
-    font-size: 18px;
-    margin-bottom: 12px;
+    font-size: 19px;
+    margin-bottom: 16px;
     color: #0b5ed7;
 }
 
@@ -123,17 +118,18 @@ h3 {
 
 input {
     width: 100%;
-    padding: 12px 14px;
-    margin-bottom: 16px;
-    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border-radius: 10px;
     border: 1px solid #d1d9e6;
     font-size: 14px;
+    transition: 0.2s ease;
 }
 
 input:focus {
     outline: none;
     border-color: #0b5ed7;
-    box-shadow: 0 0 0 3px rgba(11,94,215,0.15);
+    box-shadow: 0 0 0 4px rgba(11,94,215,0.12);
 }
 
 /* ===============================
@@ -142,19 +138,19 @@ input:focus {
 
 #credits {
     font-weight: 600;
-    padding: 12px 16px;
+    padding: 14px 18px;
     background: #eef4ff;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
     display: inline-block;
 }
 
 #notification {
-    margin-top: 20px;
-    padding: 14px 16px;
+    margin-top: 25px;
+    padding: 18px;
     background: #eef4ff;
     border-left: 5px solid #0b5ed7;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 14px;
 }
 
@@ -163,10 +159,10 @@ input:focus {
 ================================ */
 
 #dynamicTools {
-    margin-top: 30px;
-    padding: 25px;
+    margin-top: 40px;
+    padding: 35px;
     background: #f8fbff;
-    border-radius: 14px;
+    border-radius: 16px;
     border: 1px solid #e0ebff;
     text-align: center;
 }
@@ -175,12 +171,12 @@ input:focus {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 10px;
+    gap: 22px;   /* ⭐ Larger spacing */
+    margin-top: 20px;
 }
 
 #toolButtons button {
-    min-width: 120px;
+    min-width: 140px;
 }
 
 /* ===============================
@@ -189,23 +185,23 @@ input:focus {
 
 #plans {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
 }
 
 .plan {
     background: white;
-    border-radius: 16px;
-    padding: 24px;
+    border-radius: 18px;
+    padding: 32px;
     border: 1px solid #e0ebff;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    box-shadow: 0 14px 35px rgba(0,0,0,0.06);
     transition: 0.3s ease;
     text-align: center;
 }
 
 .plan:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 35px rgba(0,0,0,0.12);
+    transform: translateY(-8px);
+    box-shadow: 0 24px 45px rgba(0,0,0,0.12);
 }
 
 .plan.active {
@@ -218,13 +214,42 @@ input:focus {
 ================================ */
 
 .auth-box {
-    max-width: 420px;
-    margin: 110px auto;
+    max-width: 440px;
+    margin: 120px auto;
     background: white;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 18px 38px rgba(0,0,0,0.12);
+    padding: 45px;
+    border-radius: 20px;
+    box-shadow: 0 22px 48px rgba(0,0,0,0.12);
     text-align: center;
+}
+
+/* ===============================
+   Product switch page
+================================ */
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+}
+
+.product-card {
+    background: white;
+    padding: 34px;
+    border-radius: 18px;
+    box-shadow: 0 16px 35px rgba(0,0,0,0.08);
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 26px 50px rgba(0,0,0,0.12);
+}
+
+.product-card h3 {
+    color: #0b5ed7;
 }
 
 /* ===============================
@@ -234,16 +259,12 @@ input:focus {
 @media (max-width: 900px) {
 
     header {
-        padding: 16px 20px;
+        padding: 18px 25px;
     }
 
     .container {
-        margin: 20px;
-        padding: 25px;
-    }
-
-    #plans {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        margin: 30px 18px;
+        padding: 32px;
     }
 }
 
@@ -256,37 +277,32 @@ input:focus {
     header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 15px;
     }
 
     .header-actions {
         width: 100%;
         justify-content: space-between;
+        gap: 12px;
     }
 
     button {
         width: 100%;
+        padding: 14px;
     }
 
     #toolButtons {
         flex-direction: column;
-        align-items: stretch;
-    }
-
-    #toolButtons button {
-        width: 100%;
+        gap: 16px;
     }
 
     .auth-box {
-        margin: 40px 15px;
-        padding: 25px;
+        margin: 50px 15px;
+        padding: 30px;
     }
 
     h2 {
-        font-size: 20px;
-    }
-
-    h3 {
-        font-size: 16px;
+        font-size: 22px;
     }
 }
 
@@ -302,6 +318,5 @@ input:focus {
 
     button {
         font-size: 13px;
-        padding: 10px;
     }
 }
