@@ -1,0 +1,222 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: JIT Entitlement Demo Stack
+
+Parameters:
+  LambdaCodeBucket:
+    Type: String
+    Description: S3 bucket containing Lambda zip files
+
+Resources:
+
+###################################
+# DynamoDB Tables
+###################################
+
+UsersTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: Users
+    BillingMode: PAY_PER_REQUEST
+    AttributeDefinitions:
+      - AttributeName: userId
+        AttributeType: S
+    KeySchema:
+      - AttributeName: userId
+        KeyType: HASH
+
+ProductsTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: Products
+    BillingMode: PAY_PER_REQUEST
+    AttributeDefinitions:
+      - AttributeName: productId
+        AttributeType: S
+    KeySchema:
+      - AttributeName: productId
+        KeyType: HASH
+
+PlansTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: JITSubscriptionPlans
+    BillingMode: PAY_PER_REQUEST
+    AttributeDefinitions:
+      - AttributeName: productId
+        AttributeType: S
+      - AttributeName: planId
+        AttributeType: S
+    KeySchema:
+      - AttributeName: productId
+        KeyType: HASH
+      - AttributeName: planId
+        KeyType: RANGE
+
+JITTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: JIT_Entitlement
+    BillingMode: PAY_PER_REQUEST
+    AttributeDefinitions:
+      - AttributeName: userId
+        AttributeType: S
+      - AttributeName: productSessionId
+        AttributeType: S
+    KeySchema:
+      - AttributeName: userId
+        KeyType: HASH
+      - AttributeName: productSessionId
+        KeyType: RANGE
+
+AuditTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: JIT_auditLog
+    BillingMode: PAY_PER_REQUEST
+    AttributeDefinitions:
+      - AttributeName: userId
+        AttributeType: S
+      - AttributeName: productSessionId
+        AttributeType: S
+    KeySchema:
+      - AttributeName: userId
+        KeyType: HASH
+      - AttributeName: productSessionId
+        KeyType: RANGE
+
+###################################
+# IAM Role for Lambdas
+###################################
+
+LambdaExecutionRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: JITLambdaExecutionRole
+    AssumeRolePolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+    ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Policies:
+      - PolicyName: DynamoSESAccess
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:*
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - scheduler:CreateSchedule
+                - iam:PassRole
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+              Resource: "*"
+
+###################################
+# Lambda Functions
+###################################
+
+AuthLambda:
+  Type: AWS::Lambda::Function
+  Properties:
+    FunctionName: AuthLambda
+    Runtime: nodejs18.x
+    Handler: index.handler
+    Role: !GetAtt LambdaExecutionRole.Arn
+    Code:
+      S3Bucket: !Ref LambdaCodeBucket
+      S3Key: auth.zip
+
+UserLambda:
+  Type: AWS::Lambda::Function
+  Properties:
+    FunctionName: UserLambda
+    Runtime: nodejs18.x
+    Handler: index.handler
+    Role: !GetAtt LambdaExecutionRole.Arn
+    Code:
+      S3Bucket: !Ref LambdaCodeBucket
+      S3Key: user.zip
+
+GrantLambda:
+  Type: AWS::Lambda::Function
+  Properties:
+    FunctionName: GrantLambda
+    Runtime: nodejs18.x
+    Handler: index.handler
+    Role: !GetAtt LambdaExecutionRole.Arn
+    Code:
+      S3Bucket: !Ref LambdaCodeBucket
+      S3Key: grant.zip
+
+LifeCycleLambda:
+  Type: AWS::Lambda::Function
+  Properties:
+    FunctionName: LifeCycleLambda
+    Runtime: nodejs18.x
+    Handler: index.handler
+    Role: !GetAtt LambdaExecutionRole.Arn
+    Environment:
+      Variables:
+        AWS_REGION: !Ref AWS::Region
+    Code:
+      S3Bucket: !Ref LambdaCodeBucket
+      S3Key: lifecycle.zip
+
+CatalogLambda:
+  Type: AWS::Lambda::Function
+  Properties:
+    FunctionName: CatalogLambda
+    Runtime: nodejs18.x
+    Handler: index.handler
+    Role: !GetAtt LambdaExecutionRole.Arn
+    Code:
+      S3Bucket: !Ref LambdaCodeBucket
+      S3Key: catalog.zip
+
+GetProductsLambda:
+  Type: AWS::Lambda::Function
+  Properties:
+    FunctionName: GetProductsLambda
+    Runtime: nodejs18.x
+    Handler: index.handler
+    Role: !GetAtt LambdaExecutionRole.Arn
+    Code:
+      S3Bucket: !Ref LambdaCodeBucket
+      S3Key: products.zip
+
+StatusLambda:
+  Type: AWS::Lambda::Function
+  Properties:
+    FunctionName: StatusLambda
+    Runtime: nodejs18.x
+    Handler: index.handler
+    Role: !GetAtt LambdaExecutionRole.Arn
+    Code:
+      S3Bucket: !Ref LambdaCodeBucket
+      S3Key: status.zip
+
+###################################
+# API Gateway
+###################################
+
+ApiGateway:
+  Type: AWS::ApiGateway::RestApi
+  Properties:
+    Name: JIT-API
+
+###################################
+# Outputs
+###################################
+
+Outputs:
+  ApiId:
+    Value: !Ref ApiGateway
