@@ -144,8 +144,8 @@ Whenever changes are pushed to the main branch, the workflow syncs the frontend 
 ---
 
 ## Author
-Malarvannan.M 
-Software Engineer at Trimble
+Malarvannan.M -- 
+Software Engineer at Trimble -- 
 Feb 2026
 
 
