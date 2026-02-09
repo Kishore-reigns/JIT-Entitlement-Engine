@@ -139,7 +139,7 @@ Whenever changes are pushed to the main branch, the workflow syncs the frontend 
 
 ---
 
-## You can further contribute to this project by creating a new feature-branch and making a pull request. Mail the demo video to this mail for validation - [Mail id: ](malarvannanm11@gmail.com)
+## You can further contribute to this project by creating a new feature-branch and making a pull request. Mail the demo video to [malarvannanm11@gmail.com] for merging
 
 ---
 
