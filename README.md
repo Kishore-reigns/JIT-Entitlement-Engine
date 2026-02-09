@@ -79,23 +79,6 @@ Backend:
 - Amazon EventBridge Scheduler
 - Amazon SES
 
----
-
-## Project Structure
-frontend/
-├── html/
-├── css/
-├── js/
-
-
-IOC/
-├── template.yaml
-└── jit-entitlement-api-dev-oas30.yaml
-
-.github/workflows/
-└── deploy.yml
-
-
 
 ---
 
@@ -156,7 +139,7 @@ Whenever changes are pushed to the main branch, the workflow syncs the frontend 
 
 ---
 
-## You can further contribute this project by making a pull request and mailing a demo video to the mail - f[Mail id:](malarvannanm11@gmail.com)
+## You can further contribute to this project by creating a new feature-branch and making a pull request. Mail the demo video to this mail for validation - [Mail id: ](malarvannanm11@gmail.com)
 
 ---
 
